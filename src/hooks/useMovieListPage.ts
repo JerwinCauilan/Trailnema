@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useMoviesInfinite } from "./useMoviesInfinite";
 
 export const useMovieListPage = (path: string) => {
@@ -16,7 +16,20 @@ export const useMovieListPage = (path: string) => {
         refetch,
     } = useMoviesInfinite(path ?? "");
 
-    const movies = data?.pages.flat() ?? [];
+    const movies = useMemo(() => {
+        const seen = new Set<number>();
+
+        return (data?.pages.flat() ?? []).filter((movie) => {
+            if (seen.has(movie.id)) return false;
+            seen.add(movie.id);
+            return true;
+        });
+    }, [data]);
+
+    const retry = useCallback(
+        () => (isFetchNextPageError ? fetchNextPage() : refetch()),
+        [isFetchNextPageError, fetchNextPage, refetch],
+    );
 
     // Ensure the page always opens at the top, regardless of scroll
     useEffect(() => {
@@ -41,8 +54,6 @@ export const useMovieListPage = (path: string) => {
 
         return () => observer.disconnect();
     }, [hasNextPage, isFetching, isError, fetchNextPage]);
-
-    const retry = () => (isFetchNextPageError ? fetchNextPage() : refetch());
 
     return {
         movies,

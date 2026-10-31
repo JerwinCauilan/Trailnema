@@ -1,5 +1,4 @@
 import { Box, Button, Stack, Typography, useTheme } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
 import { CirclePlay, Star } from "lucide-react";
 import { useNavigate } from "react-router";
 import "swiper/css";
@@ -7,14 +6,13 @@ import "swiper/css/pagination";
 import { Autoplay, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import ErrorState from "../../components/ErrorState/ErrorState";
-import { getMovies } from "../../services/MovieService";
+import { useMovies } from "../../hooks/useMovies";
 import { IMAGEPATH } from "../../utils/constant";
 import HomeSliderSkeleton from "./HomeSliderSkeleton";
 
 const HomeSlider = () => {
     const theme = useTheme();
     const navigate = useNavigate();
-
     const path = "upcoming";
 
     const {
@@ -22,10 +20,7 @@ const HomeSlider = () => {
         isLoading,
         isError,
         refetch,
-    } = useQuery({
-        queryKey: ["movies", path],
-        queryFn: () => getMovies({ path }),
-    });
+    } = useMovies({ path });
 
     if (isLoading) return <HomeSliderSkeleton />;
 

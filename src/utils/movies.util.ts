@@ -1,4 +1,11 @@
-import { MovieDetails, Movies, RawMovieDetails, RawMovies } from "./type";
+import {
+    MovieDetails,
+    Movies,
+    MovieTrailer,
+    RawMovieDetails,
+    RawMovies,
+    RawMovieTrailer,
+} from "./type";
 
 export const formatMovies = (data: RawMovies[]): Movies[] => {
     return data.map((movie) => ({
@@ -25,4 +32,19 @@ export const formatMovieDetails = (data: RawMovieDetails): MovieDetails => {
         backdropPath: data.backdrop_path,
         posterPath: data.poster_path,
     };
+};
+
+export const formatMovieTrailer = (
+    data: RawMovieTrailer["results"],
+): MovieTrailer[] => {
+    return data.map((trailer) => ({
+        id: trailer.id,
+        key: trailer.key,
+        name: trailer.name,
+        official: trailer.official,
+        publishedAt: trailer.published_at,
+        site: trailer.site,
+        size: trailer.size,
+        type: trailer.type,
+    }));
 };

@@ -1,54 +1,97 @@
-# React + TypeScript + Vite
+# Trailnema
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Trailnema is a movie discovery app for browsing popular, top-rated, now-playing, and upcoming movies. Search for a title, open its details, explore similar movies, and watch available trailers without leaving the app.
 
-Currently, two official plugins are available:
+Movie information comes from [The Movie Database (TMDB)](https://www.themoviedb.org/), and trailers are embedded from YouTube.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## Expanding the ESLint configuration
+- Browse movies by category, including Popular, Top Rated, Now Playing, and Upcoming.
+- Search for movies by title.
+- View movie details and recommendations for similar movies.
+- Watch available movie trailers on the details page.
+- Load additional movies on category pages as you scroll.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Getting started
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+### Prerequisites
+
+- Node.js and npm
+- A TMDB account and API Read Access Token
+
+### Install and configure
+
+1. Clone the repository and enter the project directory:
+
+    ```sh
+    git clone <repository-url>
+    cd trailnema
+    ```
+
+2. Install dependencies:
+
+    ```sh
+    npm install
+    ```
+
+    If you want to install exactly the dependency versions in the lockfile, use `npm ci` instead.
+
+3. Create a local environment file by copying `env-example.txt` to `.env`.
+
+    PowerShell:
+
+    ```powershell
+    Copy-Item env-example.txt .env
+    ```
+
+    macOS, Linux, or Git Bash:
+
+    ```sh
+    cp env-example.txt .env
+    ```
+
+4. Open `.env` and set your TMDB API base URL and API Read Access Token:
+
+    ```dotenv
+    VITE_BASE_URL_TMDB=https://api.themoviedb.org
+    VITE_AUTHORIZATION_KEY=YOUR_TMDB_API_READ_ACCESS_TOKEN
+    ```
+
+    Create or find your token in your TMDB account's API settings.
+
+### Run the app
+
+Start the development server:
+
+```sh
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Open the local URL printed by Vite in your terminal (usually `http://localhost:5173`).
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Other commands
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+| Command           | Description                                                                  |
+| ----------------- | ---------------------------------------------------------------------------- |
+| `npm run build`   | Type-check the project and create a production build in `dist/`.             |
+| `npm run preview` | Serve the production build locally for a preview. Run `npm run build` first. |
+| `npm run lint`    | Run ESLint on the project.                                                   |
+
+## Project structure
+
+```text
+src/
+├── components/       # Shared UI, such as the navbar, search, movie cards, and carousels
+├── features/         # Movie-specific screens and sections
+│   ├── HomeSlider/
+│   ├── MovieDetails/
+│   ├── MovieList/
+│   ├── MovieListPage/
+│   └── Trailers/
+├── hooks/            # Data-fetching and UI hooks
+├── pages/            # Page-level composition
+├── providers/        # React Query and Material UI theme providers
+├── routes/           # Application route definitions
+├── services/         # TMDB movie API operations
+└── utils/            # API helpers, movie formatting, constants, and types
 ```

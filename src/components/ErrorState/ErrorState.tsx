@@ -3,13 +3,11 @@ import { Box, Button, Typography } from "@mui/material";
 type ErrorStateProps = {
     message?: string;
     onRetry?: () => void;
-    imageSize?: number;
 };
 
 const ErrorState = ({
     message = "Something went wrong.",
     onRetry,
-    imageSize = 200,
 }: ErrorStateProps) => (
     <Box
         sx={{
@@ -21,16 +19,6 @@ const ErrorState = ({
             py: 4,
         }}
     >
-        <Box
-            component="img"
-            // src={}
-            sx={{
-                width: imageSize,
-                maxWidth: "100%",
-                height: "auto",
-                objectFit: "contain",
-            }}
-        />
         <Typography color="error" sx={{ mb: 1 }}>
             {message}
         </Typography>

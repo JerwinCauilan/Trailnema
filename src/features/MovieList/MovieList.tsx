@@ -1,9 +1,6 @@
 import { Box, Button, Typography } from "@mui/material";
 import { useNavigate } from "react-router";
-import { Swiper, SwiperSlide } from "swiper/react";
-import ErrorState from "../../components/ErrorState/ErrorState";
-import MovieCard from "../../components/MovieCard/MovieCard";
-import MovieCardSkeleton from "../../components/MovieCard/MovieCardSkeleton";
+import MovieCarousel from "../../components/MovieCarousel/MovieCarousel";
 import { useMovies } from "../../hooks/useMovies";
 
 type MovieListProps = {
@@ -36,44 +33,24 @@ const MovieList = ({ title, path = "upcoming", page }: MovieListProps) => {
                 }}
             >
                 <Typography variant="h5">{title}</Typography>
-
-                <Button
-                    size="small"
-                    variant="text"
-                    onClick={handleMoreClick}
-                    sx={{ textTransform: "none" }}
-                >
-                    More
-                </Button>
+                {!(isLoading || isError) && (
+                    <Button
+                        size="small"
+                        variant="text"
+                        onClick={handleMoreClick}
+                        sx={{ textTransform: "none" }}
+                    >
+                        More
+                    </Button>
+                )}
             </Box>
 
-            {isError ? (
-                <ErrorState
-                    message="Couldn't load this list."
-                    onRetry={() => refetch()}
-                />
-            ) : (
-                <Swiper
-                    slidesPerView="auto"
-                    spaceBetween={10}
-                    style={{ width: "100%", padding: "10px 0" }}
-                >
-                    {isLoading
-                        ? Array.from({ length: 20 }).map((_, idx) => (
-                              <SwiperSlide key={idx} style={{ width: 180 }}>
-                                  <MovieCardSkeleton />
-                              </SwiperSlide>
-                          ))
-                        : movies?.map((movie) => (
-                              <SwiperSlide
-                                  key={movie.id}
-                                  style={{ width: 180 }}
-                              >
-                                  <MovieCard movies={movie} />
-                              </SwiperSlide>
-                          ))}
-                </Swiper>
-            )}
+            <MovieCarousel
+                movies={movies}
+                isLoading={isLoading}
+                isError={isError}
+                onRetry={() => void refetch()}
+            />
         </Box>
     );
 };

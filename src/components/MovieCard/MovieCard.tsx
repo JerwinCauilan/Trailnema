@@ -43,6 +43,7 @@ const MovieCard = ({ movies }: MovieCardProps) => {
                             overflow: "hidden",
                             textOverflow: "ellipsis",
                         }}
+                        title={movies.title}
                     >
                         {movies.title}
                     </Typography>

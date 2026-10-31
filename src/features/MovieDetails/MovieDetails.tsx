@@ -1,16 +1,14 @@
-import React from "react";
-import { useParams } from "react-router";
 import { Box, Chip, Stack, Typography, useTheme } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
+import { useParams } from "react-router";
+import ErrorState from "../../components/ErrorState/ErrorState";
+import SimilarMovies from "../../components/SimilarMovies/SimilarMovies";
+import { useMovieDetails } from "../../hooks/useMovieDetails";
+import { IMAGEPATH } from "../../utils/constant";
+import Trailers from "../Trailers/Trailers";
+import MovieDeitalsContent from "./MovieDeitalsContent";
+import MovieDetailsSkeleton from "./MovieDetailsSkeleton";
 
-import { IMAGEPATH } from "../utils/constant";
-import { getMovieDetails } from "../services/MovieService";
-import Trailers from "../components/Trailers";
-import SimilarMovies from "../components/SimilarMovies";
-import Navbar from "../components/Navbar";
-import { ChevronDown } from "lucide-react";
-
-const Details = () => {
+const MovieDetails = () => {
     const theme = useTheme();
     const { movieId } = useParams();
 
@@ -18,71 +16,48 @@ const Details = () => {
         data: details,
         isLoading,
         isError,
-    } = useQuery({
-        queryKey: ["details", movieId],
-        queryFn: () => getMovieDetails(movieId || ""),
-        enabled: !!movieId,
-    });
+        refetch,
+    } = useMovieDetails(movieId);
 
     if (isLoading) {
         return (
-            <Box
-                sx={{
-                    minHeight: "100vh",
-                    backgroundColor: `${theme.palette.common.black}`,
-                    color: `${theme.palette.common.white}`,
-                }}
-            >
-                <Navbar />
-                <Box sx={{ p: 4 }}>
-                    <Typography>Loading...</Typography>
-                </Box>
-            </Box>
+            <MovieDeitalsContent>
+                <MovieDetailsSkeleton />
+            </MovieDeitalsContent>
         );
     }
 
     if (isError || !details) {
         return (
-            <Box
-                sx={{
-                    minHeight: "100vh",
-                    backgroundColor: `${theme.palette.common.black}`,
-                    color: `${theme.palette.common.white}`,
-                }}
-            >
-                <Navbar />
+            <MovieDeitalsContent>
                 <Box sx={{ p: 4 }}>
-                    <Typography>Failed to load movie details.</Typography>
+                    <ErrorState
+                        message="Failed to load movie details."
+                        onRetry={() => void refetch()}
+                    />
                 </Box>
-            </Box>
+            </MovieDeitalsContent>
         );
     }
 
     return (
-        <Box
-            sx={{
-                width: "100%",
-                minHeight: "100vh",
-                backgroundColor: `${theme.palette.common.black}`,
-                color: `${theme.palette.common.white}`,
-                display: "flex",
-                flexDirection: "column",
-            }}
-        >
-            <Navbar />
-
+        <MovieDeitalsContent>
             <Box
                 flex={1}
                 sx={{
                     position: "relative",
                     overflow: "hidden",
+                    display: "flex",
+                    flexDirection: "column",
 
                     "&::before": {
                         content: '""',
                         position: "absolute",
                         inset: 0,
                         minHeight: "500px",
-                        backgroundImage: `url(${IMAGEPATH}${details.backdropPath})`,
+                        backgroundImage: details.backdropPath
+                            ? `url(${IMAGEPATH}${details.backdropPath})`
+                            : "none",
                         backgroundSize: "cover",
                         backgroundPosition: "top",
                         backgroundRepeat: "no-repeat",
@@ -99,40 +74,23 @@ const Details = () => {
                     },
                 }}
             >
-                {/* Content */}
                 <Box
                     sx={{
+                        flex: 1,
                         position: "relative",
                         zIndex: 1,
-                        width: {
-                            xs: "95%",
-                            sm: "90%",
-                            md: "85%",
-                        },
-                        height: "100%",
+                        width: { xs: "95%", sm: "90%", md: "85%" },
                         mx: "auto",
-                        pt: {
-                            xs: 6,
-                            sm: 10,
-                            md: 15,
-                        },
-                        pb: 8,
-                        overflow: "hidden",
+                        pt: { xs: 6, sm: 10, md: 15 },
+                        pb: 4,
+                        display: "flex",
+                        flexDirection: "column",
                     }}
                 >
                     <Stack
-                        direction={{
-                            xs: "column",
-                            md: "row",
-                        }}
-                        gap={{
-                            xs: 3,
-                            md: 5,
-                        }}
-                        alignItems={{
-                            xs: "center",
-                            md: "flex-end",
-                        }}
+                        direction={{ xs: "column", md: "row" }}
+                        gap={{ xs: 3, md: 5 }}
+                        alignItems={{ xs: "center", md: "flex-end" }}
                     >
                         <Box
                             component="img"
@@ -152,11 +110,7 @@ const Details = () => {
                             }}
                         />
 
-                        <Box
-                            sx={{
-                                maxWidth: "900px",
-                            }}
-                        >
+                        <Box sx={{ maxWidth: "900px" }}>
                             <Typography
                                 component="h1"
                                 sx={{
@@ -190,7 +144,6 @@ const Details = () => {
                                 </Typography>
                             </Typography>
 
-                            {/* Tagline */}
                             {details.tagline && (
                                 <Typography
                                     sx={{
@@ -226,15 +179,12 @@ const Details = () => {
                             <Typography
                                 sx={{
                                     mb: 0.5,
-                                    fontSize: {
-                                        xs: "0.70rem",
-                                        md: "1rem",
-                                    },
+                                    fontSize: { xs: "0.70rem", md: "1rem" },
                                 }}
                             >
                                 Genres:
                             </Typography>
-                            <Stack direction="row" gap={0.5}>
+                            <Stack direction="row" gap={0.5} mb={1}>
                                 {details.genres?.map((genre) => (
                                     <Chip
                                         key={genre.name}
@@ -250,10 +200,7 @@ const Details = () => {
                             <Typography
                                 sx={{
                                     mb: 0.5,
-                                    fontSize: {
-                                        xs: "0.70rem",
-                                        md: "1rem",
-                                    },
+                                    fontSize: { xs: "0.70rem", md: "1rem" },
                                 }}
                             >
                                 Rating: {details.voteAverage?.toFixed(1)}
@@ -262,50 +209,34 @@ const Details = () => {
                             <Typography
                                 sx={{
                                     mb: 0.5,
-                                    fontSize: {
-                                        xs: "0.70rem",
-                                        md: "1rem",
-                                    },
+                                    fontSize: { xs: "0.70rem", md: "1rem" },
                                 }}
                             >
                                 Original Language: {details.language}
                             </Typography>
 
                             <Typography
-                                sx={{
-                                    fontSize: {
-                                        xs: "0.70rem",
-                                        md: "1rem",
-                                    },
-                                }}
+                                sx={{ fontSize: { xs: "0.70rem", md: "1rem" } }}
                             >
                                 Release Date: {details.releaseDate}
                             </Typography>
                         </Box>
                     </Stack>
-
-                    {/* Additional Sections */}
-                    <Box
-                        flex={1}
-                        width="100%"
-                        sx={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            flexDirection: "column",
-                        }}
-                    >
-                        <Typography>Trailers</Typography>
-                        <ChevronDown size={32} />
-                    </Box>
-                    {/* 
-                    <Trailers movieId={movieId} />
-                    <SimilarMovies movieId={movieId} />
-                    */}
                 </Box>
             </Box>
-        </Box>
+
+            <Box
+                sx={{
+                    width: { xs: "95%", sm: "90%", md: "85%" },
+                    mx: "auto",
+                    py: 4,
+                }}
+            >
+                <Trailers movieId={movieId ?? ""} />
+                <SimilarMovies movieId={movieId} />
+            </Box>
+        </MovieDeitalsContent>
     );
 };
 
-export default Details;
+export default MovieDetails;

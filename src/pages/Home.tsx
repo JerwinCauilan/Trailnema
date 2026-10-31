@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
-import MovieList from "../features/MovieList/MovieList";
-import Navbar from "../components/Navbar";
+import Navbar from "../components/Navbar/Navbar";
 import HomeSlider from "../features/HomeSlider/HomeSlider";
+import MovieList from "../features/MovieList/MovieList";
 
 const Home = () => {
     return (

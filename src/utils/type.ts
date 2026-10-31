@@ -1,3 +1,9 @@
+export type GetMoviesType = {
+    path: string;
+    page?: number;
+    title?: string;
+};
+
 export type RawMoviesResponse = {
     results: RawMovies[];
     page: number;
@@ -51,35 +57,27 @@ export type MovieDetails = {
     posterPath: string;
 };
 
-export type GetMoviesType = {
-    path: string;
-    page?: number;
-    title?: string;
-};
-
-export interface MovieCardType {
-    id: number;
-    poster_path: string;
-    release_date: string;
-    title: string;
-    vote_average: number;
-    original_language: string;
-}
-
-export interface CategoryType {
-    id: number;
-    name: string;
-    path: string;
-}
-
-export type FetchMoviesType = {
-    path: string;
-    page?: number;
-    title?: string;
-};
-
-export type TrailerType = {
-    key: string;
+export type RawMovieTrailer = {
     id: string;
+    results: {
+        id: string;
+        key: string;
+        name: string;
+        official: boolean;
+        published_at: string;
+        site: string;
+        size: number;
+        type: string;
+    }[];
+};
+
+export type MovieTrailer = {
+    id: string;
+    key: string;
     name: string;
+    official: boolean;
+    publishedAt: string;
+    site: string;
+    size: number;
+    type: string;
 };

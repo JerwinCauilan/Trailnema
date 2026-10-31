@@ -1,24 +1,8 @@
 export const IMAGEPATH = "https://image.tmdb.org/t/p/original";
 
-export const pages = [
-    {
-        id: 1,
-        name: "Now Playing",
-        path: "/movies/now_playing"
-    },
-    {
-        id: 2,
-        name: "Popular",
-        path: "/movies/popular"
-    },
-    {
-        id: 3,
-        name: "Top Rated",
-        path: "/movies/top_rated"
-    },
-    {
-        id: 4,
-        name: "Upcoming",
-        path: "/movies/upcoming"
-    }
-];
+export const MOVIE_CATEGORIES = [
+    { path: "popular", title: "Popular" },
+    { path: "top_rated", title: "Top Rated" },
+    { path: "now_playing", title: "Now Playing" },
+    { path: "upcoming", title: "Upcoming" },
+] as const;

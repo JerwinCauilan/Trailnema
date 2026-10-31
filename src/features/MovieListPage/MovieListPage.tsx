@@ -2,25 +2,31 @@ import { Box, Grid, Typography } from "@mui/material";
 import { useLocation, useParams } from "react-router";
 import ErrorState from "../../components/ErrorState/ErrorState";
 import MovieCard from "../../components/MovieCard/MovieCard";
-import MovieCardSkeleton from "../../components/MovieCard/MovieCardSkeleton";
-import Navbar from "../../components/Navbar";
+import Navbar from "../../components/Navbar/Navbar";
 import { useMovieListPage } from "../../hooks/useMovieListPage";
+import MovieListPageSkeleton from "./MovieListPageSkeleton";
+
+const INITIAL_SKELETONS = 20;
+const NEXT_PAGE_SKELETONS = 6;
+
+const InitialMovieError = ({ onRetry }: { onRetry: () => void }) => {
+    return <ErrorState message="Couldn't load movies." onRetry={onRetry} />;
+};
 
 const MovieListPage = () => {
-    const { path } = useParams<{ path: string }>();
-    const location = useLocation();
-    const title = (location.state as { title?: string })?.title;
+    const { path = "" } = useParams<{ path: string }>();
+    const title = useLocation().state?.title as string | undefined;
 
     const {
         movies,
         isLoading,
         isFetchingNextPage,
-        hasNextPage,
-        loadMoreRef,
         isError,
         isFetchNextPageError,
+        hasNextPage,
+        loadMoreRef,
         retry,
-    } = useMovieListPage(path ?? "");
+    } = useMovieListPage(path);
 
     const isInitialError = isError && !isFetchNextPageError;
 
@@ -28,69 +34,52 @@ const MovieListPage = () => {
         <Box sx={{ width: "100%" }}>
             <Navbar />
 
-            <Box sx={{ width: "100%", p: 5 }}>
+            <Box sx={{ p: 5 }}>
                 <Typography variant="h4" sx={{ mb: 3 }}>
                     {title}
                 </Typography>
 
-                {isInitialError ? (
+                {isInitialError && <InitialMovieError onRetry={retry} />}
+
+                <Grid container spacing={2}>
+                    {isLoading ? (
+                        <MovieListPageSkeleton
+                            count={INITIAL_SKELETONS}
+                            prefix="initial"
+                        />
+                    ) : (
+                        movies.map((movie) => (
+                            <Grid
+                                key={movie.id}
+                                size={{ xs: 6, sm: 4, md: 3, lg: 2 }}
+                            >
+                                <MovieCard movies={movie} />
+                            </Grid>
+                        ))
+                    )}
+
+                    {isFetchingNextPage && (
+                        <MovieListPageSkeleton
+                            count={NEXT_PAGE_SKELETONS}
+                            prefix="next"
+                        />
+                    )}
+                </Grid>
+
+                {isFetchNextPageError && (
                     <ErrorState
-                        message="Couldn't load movies."
+                        message="Couldn't load more movies."
                         onRetry={retry}
                     />
-                ) : (
-                    <>
-                        <Grid container spacing={2}>
-                            {isLoading
-                                ? Array.from({ length: 20 }, (_, idx) => (
-                                      <Grid
-                                          key={`skeleton-initial-${idx + 1}`}
-                                          size={{ xs: 6, sm: 4, md: 3, lg: 2 }}
-                                      >
-                                          <MovieCardSkeleton />
-                                      </Grid>
-                                  ))
-                                : movies.map((movie, idx) => (
-                                      <Grid
-                                          key={`${movie.id}-${idx}`}
-                                          size={{ xs: 6, sm: 4, md: 3, lg: 2 }}
-                                      >
-                                          <MovieCard movies={movie} />
-                                      </Grid>
-                                  ))}
-
-                            {isFetchingNextPage &&
-                                Array.from({ length: 20 }, (_, idx) => (
-                                    <Grid
-                                        key={`skeleton-next-${idx + 1}`}
-                                        size={{ xs: 6, sm: 4, md: 3, lg: 2 }}
-                                    >
-                                        <MovieCardSkeleton />
-                                    </Grid>
-                                ))}
-                        </Grid>
-
-                        {isFetchNextPageError && (
-                            <ErrorState
-                                message="Couldn't load more movies."
-                                onRetry={retry}
-                            />
-                        )}
-
-                        {/* Sentinel element that triggers loading the next page when it scrolls into view */}
-                        <Box ref={loadMoreRef} sx={{ py: 2 }}>
-                            {!hasNextPage && !isLoading && !isError && (
-                                <Typography
-                                    variant="body2"
-                                    color="text.secondary"
-                                    sx={{ textAlign: "center" }}
-                                >
-                                    No more movies to show
-                                </Typography>
-                            )}
-                        </Box>
-                    </>
                 )}
+
+                <Box ref={loadMoreRef} sx={{ py: 2, textAlign: "center" }}>
+                    {!hasNextPage && !isLoading && !isError && (
+                        <Typography variant="body2" color="text.secondary">
+                            No more movies to show
+                        </Typography>
+                    )}
+                </Box>
             </Box>
         </Box>
     );
