@@ -82,7 +82,7 @@ const HomeSlider = () => {
                                 backgroundImage: `url(${IMAGEPATH}${movie.backdropPath})`,
                                 backgroundSize: "cover",
                                 backgroundRepeat: "no-repeat",
-                                backgroundPosition: "center",
+                                backgroundPosition: { xs: "60% center", sm: "center" },
                                 color: "#fff",
                                 position: "relative",
                                 display: "flex",
@@ -98,17 +98,46 @@ const HomeSlider = () => {
                                 }}
                             />
 
-                            <Box pl={10} sx={{ zIndex: 1 }}>
+                            <Box
+                                sx={{
+                                    zIndex: 1,
+                                    width: "100%",
+                                    maxWidth: 720,
+                                    px: { xs: 2, sm: 5, md: 10 },
+                                }}
+                            >
                                 <Stack
-                                    sx={{ maxWidth: "400px" }}
+                                    sx={{ maxWidth: 500 }}
                                     gap={2}
                                     mb={2}
                                 >
-                                    <Typography variant="h3" component="h1">
+                                    <Typography
+                                        variant="h3"
+                                        component="h1"
+                                        sx={{
+                                            fontSize: {
+                                                xs: "2rem",
+                                                sm: "2.5rem",
+                                                md: "3rem",
+                                            },
+                                            lineHeight: 1.15,
+                                        }}
+                                    >
                                         {movie.title}
                                     </Typography>
 
-                                    <Typography variant="body2">
+                                    <Typography
+                                        variant="body2"
+                                        sx={{
+                                            display: "-webkit-box",
+                                            WebkitBoxOrient: "vertical",
+                                            WebkitLineClamp: {
+                                                xs: 3,
+                                                sm: 4,
+                                            },
+                                            overflow: "hidden",
+                                        }}
+                                    >
                                         {movie.overview}
                                     </Typography>
 

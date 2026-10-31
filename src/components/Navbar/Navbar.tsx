@@ -34,7 +34,6 @@ const Navbar = () => {
                 }}
             >
                 <Typography
-                    fontFamily="fantasy"
                     color="textPrimary"
                     component="a"
                     href="/"

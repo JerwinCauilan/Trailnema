@@ -52,7 +52,7 @@ const SearchBar = () => {
                 sx={{
                     flex: 1,
                     minWidth: 0,
-                    maxWidth: { sm: 420, md: 500 },
+                    maxWidth: { xs: 180, sm: 280, md: 340 },
                     mx: { xs: 1, sm: 2 },
                     position: { xs: "static", sm: "relative" },
                 }}
@@ -66,12 +66,11 @@ const SearchBar = () => {
                         border: "1px solid",
                         borderColor: "divider",
                         borderRadius: 5,
-                        pl: 1.5,
                         pr: 0.5,
-                        height: 40,
+                        height: 36,
                     }}
                 >
-                    <Search size={18} />
+                    <Search size={16} />
                     <InputBase
                         value={searchValue}
                         onChange={(e) => {
@@ -88,8 +87,9 @@ const SearchBar = () => {
                         sx={{
                             flex: 1,
                             minWidth: 0,
-                            ml: 1,
+                            ml: { sx: 0, sm: 1 },
                             color: "text.primary",
+                            fontSize: "0.875rem",
                         }}
                     />
                     {searchValue && (

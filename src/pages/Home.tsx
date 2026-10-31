@@ -9,7 +9,8 @@ const Home = () => {
             <Box
                 sx={{
                     width: "100%",
-                    height: "100vh",
+                    height: { xs: "100svh", md: "100vh" },
+                    minHeight: { xs: 540, sm: 600 },
                     display: "flex",
                     flexDirection: "column",
                 }}
