@@ -1,14 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools/production";
-import { lazy, ReactNode, Suspense, useEffect, useState } from "react";
-
-const ReactQueryDevToolsProduction = lazy(() =>
-    import("@tanstack/react-query-devtools/build/modern/production.js").then(
-        (d) => ({
-            default: d.ReactQueryDevtools,
-        }),
-    ),
-);
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { ReactNode } from "react";
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -20,22 +12,10 @@ const queryClient = new QueryClient({
 });
 
 const QueryProvider = ({ children }: { children: ReactNode }) => {
-    const [showDevTools, setShowDevTools] = useState(false);
-
-    useEffect(() => {
-        // @ts-expect-error Devtools in production
-        window.toggleDevTools = () => setShowDevTools((prev) => !prev);
-    }, []);
-
     return (
         <QueryClientProvider client={queryClient}>
             {children}
-            <ReactQueryDevtools initialIsOpen />
-            {showDevTools && (
-                <Suspense fallback={null}>
-                    <ReactQueryDevToolsProduction />
-                </Suspense>
-            )}
+            {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen />}
         </QueryClientProvider>
     );
 };
