@@ -1,36 +1,83 @@
-export interface CarouselMoviesType {
+export type GetMoviesType = {
+    path: string;
+    page?: number;
+    title?: string;
+};
+
+export type RawMoviesResponse = {
+    results: RawMovies[];
+    page: number;
+    total_pages: number;
+    total_results: number;
+};
+
+export type RawMovies = {
     id: number;
-    backdrop_path: string;
-    poster_path: string;
     title: string;
     overview: string;
     vote_count: number;
-}
-
-export interface MovieCardType {
-    id: number;
+    vote_average: number;
+    backdrop_path: string;
     poster_path: string;
-    release_date: string;
+};
+
+export type Movies = {
+    id: number;
     title: string;
+    overview: string;
+    voteCount: number;
+    voteAverage: number;
+    backdropPath: string;
+    posterPath: string;
+};
+
+export type RawMovieDetails = {
+    id: number;
+    original_title: string;
+    overview: string;
+    tagline: string;
+    genres: { name: string }[];
+    release_date: string;
     vote_average: number;
     original_language: string;
-}
+    backdrop_path: string;
+    poster_path: string;
+};
 
-export interface CategoryType {
+export type MovieDetails = {
     id: number;
-    name: string;
-    path: string;
-}
+    title: string;
+    overview: string;
+    tagline: string;
+    genres: { name: string }[];
+    releaseDate: string;
+    voteAverage: number;
+    language: string;
+    backdropPath: string;
+    posterPath: string;
+};
 
-export interface MovieDetailType {
-    id: number
-    poster_path: string
-    backdrop_path: string
-    original_title: string
-    release_date: string
-    tagline: string
-    overview: string
-    genres: { name: string }[]
-    vote_average: number
-    original_language: string
-}
+export type RawMovieTrailer = {
+    id: string;
+    results: {
+        id: string;
+        key: string;
+        name: string;
+        official: boolean;
+        published_at: string;
+        site: string;
+        size: number;
+        type: string;
+    }[];
+};
+
+export type MovieTrailer = {
+    id: string;
+    key: string;
+    name: string;
+    official: boolean;
+    publishedAt: string;
+    site: string;
+    size: number;
+    type: string;
+};

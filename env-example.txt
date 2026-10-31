@@ -1,0 +1,2 @@
+VITE_BASE_URL_TMDB=https://api.themoviedb.org
+VITE_AUTHORIZATION_KEY=YOUR_AUTH_KEY
