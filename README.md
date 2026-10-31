@@ -4,6 +4,10 @@ Trailnema is a movie discovery app for browsing popular, top-rated, now-playing,
 
 Movie information comes from [The Movie Database (TMDB)](https://www.themoviedb.org/), and trailers are embedded from YouTube.
 
+## Live demo
+
+Check out the deployed app at [trailnema.netlify.app](https://trailnema.netlify.app/).
+
 ## Features
 
 - Browse movies by category, including Popular, Top Rated, Now Playing, and Upcoming.
